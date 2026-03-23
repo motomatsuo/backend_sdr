@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Itens de Solução/">
+    <File Path=".dockerignore" />
+    <File Path="Dockerfile" />
+  </Folder>
+  <Project Path="BackEnd.API/BackEnd.API.csproj" />
+  <Project Path="BackEnd.Modelos/BackEnd.Modelos.csproj" />
+  <Project Path="BackEnd.Repositorios/BackEnd.Repositorios.csproj" />
+  <Project Path="BackEnd.Servicos/BackEnd.Servicos.csproj" />
+</Solution>
