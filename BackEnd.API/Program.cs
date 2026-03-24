@@ -226,6 +226,13 @@ namespace BackEnd.API
 
             app.UseCors("FrontendPolicy");
 
+            app.Use(async (context, next) =>
+            {
+                app.Logger.LogInformation("REQ {Method} {Path}", context.Request.Method, context.Request.Path);
+                await next();
+                app.Logger.LogInformation("RES {StatusCode} {Path}", context.Response.StatusCode, context.Request.Path);
+            });
+
             app.UseAuthorization();
 
             app.MapControllers();
