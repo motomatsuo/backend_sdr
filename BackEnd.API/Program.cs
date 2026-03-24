@@ -220,31 +220,15 @@ namespace BackEnd.API
                 app.UseSwaggerUI();
             }
 
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseCors("FrontendPolicy");
 
-            app.Use(async (context, next) =>
-            {
-                app.Logger.LogInformation("REQ {Method} {Path}", context.Request.Method, context.Request.Path);
-                await next();
-                app.Logger.LogInformation("RES {StatusCode} {Path}", context.Response.StatusCode, context.Request.Path);
-            });
-
             app.UseAuthorization();
 
             app.MapControllers();
-
-
-            app.Map("/error", () => Results.Problem("Ocorreu um erro interno."));
-
-            app.MapGet("/health-test", () => Results.Ok(new
-            {
-                status = "ok",
-                environment = app.Environment.EnvironmentName
-            }));
 
             app.Run();
         }
