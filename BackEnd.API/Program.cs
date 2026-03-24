@@ -230,6 +230,15 @@ namespace BackEnd.API
 
             app.MapControllers();
 
+
+            app.Map("/error", () => Results.Problem("Ocorreu um erro interno."));
+
+            app.MapGet("/health-test", () => Results.Ok(new
+            {
+                status = "ok",
+                environment = app.Environment.EnvironmentName
+            }));
+
             app.Run();
         }
     }
