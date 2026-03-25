@@ -123,7 +123,7 @@ namespace BackEnd.Servicos.SDR.Services
                 if (leadRequestList == null || !leadRequestList.Any())
                     throw new ModelException("A lista de leads está vazia.");
 
-                /*
+                // Removi o comentario que estava aqui
                 var usersWithLeads = await _loginPortalService.RetriveLeadsUsersAsync();
                 var userIds = usersWithLeads
                     .Select(u => u.IdLoginPortal)
@@ -131,9 +131,9 @@ namespace BackEnd.Servicos.SDR.Services
 
                 if (!userIds.Any())
                     throw new ModelException("Nenhum usuário disponível para receber leads.");
-                */
+                
 
-                List<int> userIds = new List<int> {1, 2, 3 }; // Mock para teste
+                //List<int> userIds = new List<int> {1, 2, 3 }; // Mock para teste
 
                 var leadsCriados = new List<Lead>();
                 int index = 0;
