@@ -159,9 +159,9 @@ namespace BackEnd.Repositorios.SDR.DAL
             return activitiesForDay;
         } // Completo
 
-        public async Task<Lead> InsertLead(Lead lead, int loginPortalFk)
+        public async Task<Lead> InsertLead(int idAdminOrLeader, Lead lead, int loginPortalFk)
         {
-            int idLead = await this.CreateLead(lead, loginPortalFk);
+            int idLead = await this.CreateLead(idAdminOrLeader, lead, loginPortalFk);
             await InsertAddress(lead.EnderecosLead, idLead);
             await InsertContact(lead.ContatosLead, idLead);
             lead.LeadId = idLead;
@@ -243,7 +243,7 @@ namespace BackEnd.Repositorios.SDR.DAL
 
         // -------------------------------- MÉTODOS PRIVADOS REFATORADOS E COMPLETOS --------------------------------
 
-        private async Task<int> CreateLead(Lead lead, int loginPortalFk)
+        private async Task<int> CreateLead(int idAdminOrLeader, Lead lead, int loginPortalFk)
         {
             var leadDb = new LeadDbRepresent
             {
@@ -267,7 +267,7 @@ namespace BackEnd.Repositorios.SDR.DAL
             if (created == null)
                 throw new RepositoriesException("Erro ao inserir lead.");
 
-            await this.RegisterFirstActivity(created.LeadId/*, int idLoginPortal*/);
+            await this.RegisterFirstActivity(created.LeadId, idAdminOrLeader);
 
             return created.LeadId;
         } // Completo
@@ -346,6 +346,7 @@ namespace BackEnd.Repositorios.SDR.DAL
                 .Get();
 
             string cnpj = selectResponse.Models.FirstOrDefault().CNPJ;
+            int idLoginPortal = selectResponse.Models.FirstOrDefault().LoginPortalFk;
 
             string description = $"Status do lead atualizado | CNPJ: {cnpj} | Status atual: {(ProspectionStatus)statusProspecao}";
 
@@ -354,7 +355,8 @@ namespace BackEnd.Repositorios.SDR.DAL
                 LeadFk = idLead,
                 Description = description,
                 Register = DateTime.Now,
-                LoginPortalFk = 1, // Por enquando vou deixar mocado, depois a gente vê como pegar o id do usuário logado
+                //LoginPortalFk = 1, // Por enquando vou deixar mocado, depois a gente vê como pegar o id do usuário logado
+                LoginPortalFk = idLoginPortal,
                 StatusProspeccaoFk = (int)((ProspectionStatus)statusProspecao)
             };
 
@@ -369,7 +371,7 @@ namespace BackEnd.Repositorios.SDR.DAL
 
 
 
-        private async Task RegisterFirstActivity(int idLead/*, int idLoginPortal*/)
+        private async Task RegisterFirstActivity(int idLead, int idAdminOrLeader)
         {
             var response = await _supabase
                 .From<LeadDbRepresent>()
@@ -387,8 +389,8 @@ namespace BackEnd.Repositorios.SDR.DAL
                 LeadFk = idLead,
                 Description = description,
                 Register = DateTime.Now,
-                // LoginPortalFk = idLoginPortal  Por enquando vou deixar mocado, mas jas esta pronto quando for para produção é só apagar a linha de baixo e habilitar essa linha
-                LoginPortalFk = 1,
+                LoginPortalFk = idAdminOrLeader,
+                //LoginPortalFk = 1,
                 StatusProspeccaoFk = (int)ProspectionStatus.NovoLead
             };
 
@@ -399,11 +401,5 @@ namespace BackEnd.Repositorios.SDR.DAL
             if (insertResponse.Models == null)
                 throw new RepositoriesException("Erro ao registrar atividade de inclusão de lead.");
         }
-
-
-        
-
-
-
     }
 }

@@ -97,13 +97,13 @@ namespace BackEnd.Servicos.SDR.Services
             }
         } // Completo
 
-        public async Task<LeadResponse> RegisterLead(CreateLeadRequest leadRequest)
+        public async Task<LeadResponse> RegisterLead(int idAdminOrLeader, CreateLeadRequest leadRequest)
         {
             try
             {
                 _lead = ConvertRequestToLead(leadRequest); // Tem que ser ao contrario, 1º Converte 2º valida
                 _leadValidator.ValidateLead(_lead);
-                var createdLead = await _leadDAL.InsertLead(_lead, 1); // Coloquei 1 como mock só para teste
+                var createdLead = await _leadDAL.InsertLead(idAdminOrLeader, _lead, 45); // Coloquei 45 como mock só para teste, posteriormente vou retirar essa função pois não é utilizada
                 return ConvertLeadToResponse(createdLead);
             }
             catch (ModelException ex)
@@ -116,7 +116,7 @@ namespace BackEnd.Servicos.SDR.Services
             }
         } // Completo
 
-        public async Task<List<LeadResponse>> RegisterLeadsList(List<CreateLeadRequest> leadRequestList)
+        public async Task<List<LeadResponse>> RegisterLeadsList(int idAdminOrLeader, List<CreateLeadRequest> leadRequestList)
         {
             try
             {
@@ -140,13 +140,13 @@ namespace BackEnd.Servicos.SDR.Services
 
                 foreach (var createLeadRequest in leadRequestList)
                 {
-                    var userId = userIds[index];
+                    var loginPortalFk = userIds[index];
 
                     var lead = ConvertRequestToLead(createLeadRequest);
 
                     _leadValidator.ValidateLead(lead);
 
-                    var leadCriado = await _leadDAL.InsertLead(lead, userId);
+                    var leadCriado = await _leadDAL.InsertLead(idAdminOrLeader, lead, loginPortalFk);
                     leadsCriados.Add(leadCriado);
 
                     index = (index + 1) % userIds.Count;

@@ -112,12 +112,12 @@ namespace BackEnd.API.Controllers.SDR
 
         // ------------------------------------- MÉTODOS POST REFATORADOS E CORRETOS -------------------------------------
 
-        [HttpPost]
-        public async Task<IActionResult> PostLead([FromBody] CreateLeadRequest createLeadRequest)
+        [HttpPost("{idAdminOrLeader}")]
+        public async Task<IActionResult> PostLead(int idAdminOrLeader, [FromBody] CreateLeadRequest createLeadRequest)
         {
             try
             {
-                LeadResponse leadResponse = await _leadService.RegisterLead(createLeadRequest);
+                LeadResponse leadResponse = await _leadService.RegisterLead(idAdminOrLeader, createLeadRequest);
                 return Ok(leadResponse);
             }
             catch (ModelException ex)
@@ -130,12 +130,12 @@ namespace BackEnd.API.Controllers.SDR
             }
         } // Completo
 
-        [HttpPost("batch")]
-        public async Task<IActionResult> PostLeadsList([FromBody] List<CreateLeadRequest> createLeadRequestList)
+        [HttpPost("batch/{idAdminOrLeader}")]
+        public async Task<IActionResult> PostLeadsList(int idAdminOrLeader, [FromBody] List<CreateLeadRequest> createLeadRequestList)
         {
             try
             {
-                List<LeadResponse> leadResponseList = await _leadService.RegisterLeadsList(createLeadRequestList);
+                List<LeadResponse> leadResponseList = await _leadService.RegisterLeadsList(idAdminOrLeader, createLeadRequestList);
                 return Ok(leadResponseList);
             }
             catch (ModelException ex)
