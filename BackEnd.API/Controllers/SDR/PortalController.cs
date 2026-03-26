@@ -47,4 +47,32 @@ public class PortalController : ControllerBase
             throw new HttpRequestException($"{ex.Message} Consulte o suporte.");
         }
     } // Completo
+
+    [HttpPost("{leadId}/protheus")]
+    public async Task<IActionResult> PostIdProtheusAsync(int leadId, [FromBody] IdProtheusRequest request)
+    {
+        try
+        {
+            await _loginPortalService.RegisterIdProtheusAsync(leadId, request);
+            return Ok();
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new HttpRequestException($"{ex.Message} Consulte o suporte.");
+        }
+    }
+
+    [HttpPost("{leadId}/vendedor")]
+    public async Task<IActionResult> PostIdVendedorAsync(int leadId, [FromBody] IdVendedorRequest request)
+    {
+        try
+        {
+            await _loginPortalService.RegisterIdVendedorAsync(leadId, request);
+            return Ok();
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new HttpRequestException($"{ex.Message} Consulte o suporte.");
+        }
+    }
 }

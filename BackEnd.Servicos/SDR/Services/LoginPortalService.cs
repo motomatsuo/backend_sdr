@@ -1,4 +1,5 @@
 ﻿using BackEnd.Modelos.SDR.DTO.LoginPortal;
+using BackEnd.Modelos.SDR.Modelos;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -64,5 +65,15 @@ namespace BackEnd.Servicos.SDR.Services
                 throw new HttpRequestException(ex.Message);
             }
         } // Completo
+
+        public async Task RegisterIdProtheusAsync(int leadId, IdProtheusRequest idProtheus)
+        {
+            await _matsuoSupabaseClient.InsertIdProtheus(leadId, idProtheus);
+        }
+
+        public async Task RegisterIdVendedorAsync(int leadId, IdVendedorRequest idVendedor)
+        {
+            await _matsuoSupabaseClient.InsertIdVendedor(leadId, idVendedor);
+        }
     }
 }

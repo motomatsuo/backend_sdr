@@ -179,4 +179,38 @@ public class MotoMatsuoSupabaseClient
             throw new HttpRequestException("Erro ao comunicar com o Supabase.", ex);
         }
     } // Completo
+
+    public async Task InsertIdProtheus(int leadId, IdProtheusRequest idProtheus)
+    {
+        try
+        {
+            using var response = await _httpClient.PatchAsJsonAsync($"rest/v1/leads?lead_id=eq.{leadId}", idProtheus);
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Erro Supabase: {error}");
+            }
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new HttpRequestException("Erro ao comunicar com o Supabase.", ex);
+        }
+    } // Completo
+
+    public async Task InsertIdVendedor(int leadId, IdVendedorRequest idVendedor)
+    {
+        try
+        {
+            using var response = await _httpClient.PatchAsJsonAsync($"rest/v1/leads?lead_id=eq.{leadId}", idVendedor);
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Erro Supabase: {error}");
+            }
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new HttpRequestException("Erro ao comunicar com o Supabase.", ex);
+        }
+    } // Completo
 }
