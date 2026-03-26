@@ -48,7 +48,7 @@ public class PortalController : ControllerBase
         }
     } // Completo
 
-    [HttpPost("{leadId}/protheus")]
+    [HttpPut("{leadId}/protheus")]
     public async Task<IActionResult> PostIdProtheusAsync(int leadId, [FromBody] IdProtheusRequest request)
     {
         try
@@ -62,7 +62,7 @@ public class PortalController : ControllerBase
         }
     }
 
-    [HttpPost("{leadId}/vendedor")]
+    [HttpPut("{leadId}/vendedor")]
     public async Task<IActionResult> PostIdVendedorAsync(int leadId, [FromBody] IdVendedorRequest request)
     {
         try
