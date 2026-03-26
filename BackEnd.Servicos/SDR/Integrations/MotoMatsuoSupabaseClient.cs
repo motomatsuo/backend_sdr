@@ -163,4 +163,20 @@ public class MotoMatsuoSupabaseClient
         return list;
     }
 
+    public async Task<List<SellersResponse>> SelectSellersAsync()
+    {
+        try
+        {
+            using var response = await _httpClient.GetAsync("rest/v1/db_vendedores?select=id_protheus,nome");
+
+            response.EnsureSuccessStatusCode();
+
+            var list = await response.Content.ReadFromJsonAsync<List<SellersResponse>>() ?? new List<SellersResponse>();
+            return list;
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new HttpRequestException("Erro ao comunicar com o Supabase.", ex);
+        }
+    } // Completo
 }

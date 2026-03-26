@@ -33,4 +33,18 @@ public class PortalController : ControllerBase
         var sdrUsers = await _loginPortalService.RetriveSdrUsersAsync();
         return Ok(sdrUsers);
     }
+
+    [HttpGet("vendedores")]
+    public async Task<IActionResult> GetSellersAsync()
+    {
+        try
+        {
+            var sellers = await _loginPortalService.RetrieveSellersAsync();
+            return Ok(sellers);
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new HttpRequestException($"{ex.Message} Consulte o suporte.");
+        }
+    } // Completo
 }

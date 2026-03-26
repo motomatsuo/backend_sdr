@@ -49,5 +49,20 @@ namespace BackEnd.Servicos.SDR.Services
             // Filtrar os usuários que pertencem ao grupo "LEADS"
             return sdrUsers.Where(user => user.Grupo != null && user.Grupo.Contains("SDR") && user.Funcao == "User" && !(user.Grupo.Contains("LEADS"))).Select(user => new LoginResponse(user.Id, user.Nome)).ToList();
         }
+
+        public async Task<List<SellersResponse>> RetrieveSellersAsync()
+        {
+            try
+            {
+                var sellers = await _matsuoSupabaseClient.SelectSellersAsync();
+                sellers.RemoveAll(s => s.Id_Protheus == "4DM1N1");
+                sellers.RemoveAll(s => s.Id_Protheus == "4DM1N2");
+                return sellers;
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new HttpRequestException(ex.Message);
+            }
+        } // Completo
     }
 }
