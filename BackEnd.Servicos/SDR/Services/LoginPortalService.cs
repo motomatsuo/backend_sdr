@@ -75,5 +75,7 @@ namespace BackEnd.Servicos.SDR.Services
         {
             await _matsuoSupabaseClient.InsertIdVendedor(leadId, idVendedor);
         }
+
+   
     }
 }

@@ -54,7 +54,7 @@ public class PortalController : ControllerBase
         try
         {
             await _loginPortalService.RegisterIdProtheusAsync(leadId, request);
-            return Ok();
+            return Ok(request);
         }
         catch (HttpRequestException ex)
         {
@@ -68,11 +68,13 @@ public class PortalController : ControllerBase
         try
         {
             await _loginPortalService.RegisterIdVendedorAsync(leadId, request);
-            return Ok();
+            return Ok(request);
         }
         catch (HttpRequestException ex)
         {
             throw new HttpRequestException($"{ex.Message} Consulte o suporte.");
         }
     }
+
+ 
 }

@@ -213,4 +213,5 @@ public class MotoMatsuoSupabaseClient
             throw new HttpRequestException("Erro ao comunicar com o Supabase.", ex);
         }
     } // Completo
+
 }
