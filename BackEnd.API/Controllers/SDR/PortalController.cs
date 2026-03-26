@@ -54,7 +54,7 @@ public class PortalController : ControllerBase
         try
         {
             await _loginPortalService.RegisterIdProtheusAsync(leadId, request);
-            return Ok(request);
+            return Ok();
         }
         catch (HttpRequestException ex)
         {
@@ -68,7 +68,7 @@ public class PortalController : ControllerBase
         try
         {
             await _loginPortalService.RegisterIdVendedorAsync(leadId, request);
-            return Ok(request);
+            return Ok();
         }
         catch (HttpRequestException ex)
         {
