@@ -61,7 +61,7 @@ namespace BackEnd.Servicos.SDR.Services
             {
                 throw new HttpRequestException(ex.Message);
             }
-        }
+        } // Completo
 
         private string GenerateRandomTemporaryId()
         {
