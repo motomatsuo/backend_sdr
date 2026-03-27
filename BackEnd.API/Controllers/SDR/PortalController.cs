@@ -62,6 +62,7 @@ public class PortalController : ControllerBase
         }
     }
 
+
     [HttpPut("{leadId}/vendedor")]
     public async Task<IActionResult> PostIdVendedorAsync(int leadId, [FromBody] IdVendedorRequest request)
     {

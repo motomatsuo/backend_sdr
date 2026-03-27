@@ -38,6 +38,12 @@ namespace BackEnd.Repositorios.SDR
         [Column("login_portal_fk")]
         public int LoginPortalFk { get; set; }
 
+        [Column("id_protheus")]
+        public string IdProtheus { get; set; }
+
+        [Column("id_vendedor")]
+        public string IdVendedor { get; set; }
+
 
 
         // public List<EnderecoLead> EnderecosLead { get; private set; } = new List<EnderecoLead>();

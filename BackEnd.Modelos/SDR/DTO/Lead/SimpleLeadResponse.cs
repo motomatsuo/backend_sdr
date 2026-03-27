@@ -16,6 +16,8 @@ namespace BackEnd.Modelos.SDR.DTO.Lead
         string? Site,
         string DataInclusao,
         string StatusProspeccaoFk,
-        int IdLoginPortal
+        int IdLoginPortal,
+        string IdProtheus,
+        string IdVendedor
     );
 }

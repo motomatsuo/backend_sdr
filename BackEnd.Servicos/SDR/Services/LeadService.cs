@@ -238,7 +238,9 @@ namespace BackEnd.Servicos.SDR.Services
                 lead.ContatosLead
                     .Select(c => new SimpleContactResponse(c.Name, c.JobTitle, c.Email, c.LeadNumbers
                     .Select(n => new SimpleNumberResponse(n.Type, n.Number, n.Whatsapp))))
-                    .ToList()
+                    .ToList(),
+                lead.IdProtheus,
+                lead.IdVendedor
             );
             return leadResponse;
         } // Completo

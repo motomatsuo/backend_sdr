@@ -15,6 +15,8 @@ namespace BackEnd.Modelos.SDR.DTO.Lead
         DateTime DataInclusao,
         string StatusProspeccaoFk,
         List<SimpleAddressResponse>? Enderecos,
-        List<SimpleContactResponse>? Contatos
+        List<SimpleContactResponse>? Contatos,
+        string IdProtheus,
+        string IdVendedor
     );
 }

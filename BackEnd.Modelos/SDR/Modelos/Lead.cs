@@ -20,6 +20,9 @@ namespace BackEnd.Modelos.SDR.Modelos
         public List<LeadContact> ContatosLead { get; set; } = new List<LeadContact>();
         public List<ActivityLog> Atividades { get; set; } = new List<ActivityLog>();
 
+        public string IdProtheus { get; set; }
+        public string IdVendedor { get; set; }
+
         public Lead(int idLead, string razaoSocial, string nomeFantasia, string cnpj, string setor, string faturamento, string site, DateTime dataInclusao, ProspectionStatus prospectionStatus)
         {
             LeadId = idLead;

@@ -37,7 +37,9 @@ namespace BackEnd.Repositorios.SDR.DAL
                 e.Site,
                 e.DataInclusao.ToShortDateString(),
                 ((ProspectionStatus)e.StatusProspeccaoFk).ToString(),
-                e.LoginPortalFk
+                e.LoginPortalFk,
+                e.IdProtheus,
+                e.IdVendedor
             )).ToList();
 
             return simpleLeadResponse;
@@ -96,7 +98,7 @@ namespace BackEnd.Repositorios.SDR.DAL
 
             var lead = new Lead(leadDbTest.LeadId, leadDbTest.RazaoSocial, leadDbTest.NomeFantasia, leadDbTest.CNPJ, leadDbTest.Setor, leadDbTest.Faturamento,
                 leadDbTest.Site, leadDbTest.DataInclusao, (ProspectionStatus)leadDbTest.StatusProspeccaoFk)
-            { EnderecosLead = Addresses, ContatosLead = contatos };
+            { IdProtheus = leadDbTest.IdProtheus, IdVendedor = leadDbTest.IdVendedor, EnderecosLead = Addresses, ContatosLead = contatos };
 
             return lead;
         } // Completo
