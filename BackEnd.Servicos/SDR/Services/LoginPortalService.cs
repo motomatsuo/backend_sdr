@@ -76,6 +76,12 @@ namespace BackEnd.Servicos.SDR.Services
             await _matsuoSupabaseClient.InsertIdVendedor(leadId, idVendedor);
         }
 
-   
+        public async Task<int> RetrieveContactIdAsync(string cnpj)
+        {
+            var contactId = await _matsuoSupabaseClient.SelectContactIdClientAsync(cnpj);
+
+            // Filtrar os usuários que pertencem ao grupo "LEADS"
+            return contactId;
+        }
     }
 }

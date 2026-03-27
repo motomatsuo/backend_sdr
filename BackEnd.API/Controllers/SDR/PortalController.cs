@@ -77,5 +77,19 @@ public class PortalController : ControllerBase
         }
     }
 
- 
+
+    // Endpoint de teste, depois eu removo
+    [HttpGet("teste/{cnpj}")]
+    public async Task<IActionResult> GetTeste(string cnpj)
+    {
+        try
+        {
+            var idContato = await _loginPortalService.RetrieveContactIdAsync(cnpj);
+            return Ok(idContato);
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new HttpRequestException($"{ex.Message} Consulte o suporte.");
+        }
+    }
 }

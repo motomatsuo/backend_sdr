@@ -45,7 +45,7 @@ namespace BackEnd.Servicos.SDR.Services
                     "Novo Cadastro",
                     "Lista-Lead",
                     DateTime.UtcNow,
-                    GenerateRandomTemporaryId(),
+                    createClientRequest.clientId,
                     "[15D] In Hold"
                 );
 
@@ -54,6 +54,8 @@ namespace BackEnd.Servicos.SDR.Services
                 await _matsuoSupabaseClient.InsertGeneralData(generalData);
                 int generalDataId = await _matsuoSupabaseClient.SelectGeneralDataId(generalDataIdRandom);
                 await _matsuoSupabaseClient.InsertGeneralTable(new GeneralTableData(DateTime.UtcNow, contactId, generalDataId, idLoginPortal));
+                int contactIdClient = await _matsuoSupabaseClient.SelectContactIdClientAsync(createClientRequest.ContactsData.cnpj);
+                await _matsuoSupabaseClient.UpdateGeneralTableAsync(contactIdClient, createClientRequest.DadosVendedorRequest.dados_vendedor);
             }
             catch (HttpRequestException ex)
             {

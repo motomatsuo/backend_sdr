@@ -214,4 +214,35 @@ public class MotoMatsuoSupabaseClient
         }
     } // Completo
 
+    public async Task<int> SelectContactIdClientAsync(string cnpj)
+    {
+        try
+        {
+            using var response = await _httpClient.GetAsync($"rest/v1/db_dadoscontato_portal_sdr?select=id&cnpj=eq.{cnpj}");
+            response.EnsureSuccessStatusCode();
+
+            var list = await response.Content.ReadFromJsonAsync<List<ContactIdClientRequest>>() ?? new List<ContactIdClientRequest>();
+            return list[0].id;
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new HttpRequestException("Erro ao comunicar com o Supabase.", ex);
+        }
+    } // Completo
+
+    public async Task UpdateGeneralTableAsync(int idContactClient, string idVendedor)
+    {
+        try
+        {
+            var toUpdate = new DadosVendedorRequest(idVendedor);
+
+            using var response = await _httpClient.PatchAsync($"/rest/v1/db_tabelageral_portal_sdr?dados_contato=eq.{idContactClient}", JsonContent.Create(toUpdate));
+            response.EnsureSuccessStatusCode();
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new HttpRequestException("Erro ao comunicar com o Supabase.", ex);
+        }
+    }
+
 }
