@@ -167,6 +167,10 @@ namespace BackEnd.API
                     client.DefaultRequestHeaders.Add("Authorization", authorization);
             });
 
+            builder.Services.AddHttpClient<ReceitaAWS>(client =>
+            {
+                client.BaseAddress = new Uri("https://www.receitaws.com.br/");
+            });
 
             // Registros de serviços/repositórios (mantive os seus)
             builder.Services.AddScoped<LeadDAL>();
