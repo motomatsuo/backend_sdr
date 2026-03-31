@@ -48,8 +48,8 @@ namespace BackEnd.Servicos.SDR.Services
             var sdrUsers = await _matsuoSupabaseClient.SelectSdrUsersAsync();
 
             // Filtrar os usuários que pertencem ao grupo "LEADS" Modifiquei para testar
-            // Esse trecho: user.Id != 6 && user.Id != 12 eu coloquei provisóriamente pois preciso remover esses dois registros da base de dados mas até o momento não posso remover etnão essa foi a solução
-            return sdrUsers.Where(user => user.Grupo != null && user.Grupo.Contains("SDR") && (user.Funcao == "User" || user.Funcao == "Leader") && user.Id != 6 && user.Id != 12 && !(user.Grupo.Contains("LEADS"))).Select(user => new LoginResponse(user.Id, user.Nome)).ToList();
+            // Esse trecho: user.Id != 51 && user.Id != 6 && user.Id != 12 eu coloquei provisóriamente pois preciso remover esses dois registros da base de dados mas até o momento não posso remover etnão essa foi a solução
+            return sdrUsers.Where(user => user.Grupo != null && user.Grupo.Contains("SDR") && (user.Funcao == "User" || user.Funcao == "Leader") && user.Id != 51 && user.Id != 6 && user.Id != 12 && !(user.Grupo.Contains("LEADS"))).Select(user => new LoginResponse(user.Id, user.Nome)).ToList();
         }
 
         public async Task<List<SellersResponse>> RetrieveSellersAsync()
