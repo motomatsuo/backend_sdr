@@ -61,12 +61,12 @@ namespace BackEnd.Servicos.SDR.Services
 
         } // Completo
 
-        public async Task<DateTime> RetrieveCadencyStartDate(int idLead)
+        public async Task<DateTime> RetrieveCadencyStartDate(int idLead, int activityId)
         {
             try
             {
                 _leadValidator.ValidateLeadId(idLead);
-                return await _leadDAL.SelectCadencyStartDate(idLead);
+                return await _leadDAL.SelectCadencyStartDate(idLead, activityId);
             }
             catch (ModelException ex)
             {
@@ -131,7 +131,7 @@ namespace BackEnd.Servicos.SDR.Services
 
                 if (!userIds.Any())
                     throw new ModelException("Nenhum usuário disponível para receber leads.");
-                
+
 
                 //List<int> userIds = new List<int> {1, 2, 3 }; // Mock para teste
 
@@ -320,6 +320,21 @@ namespace BackEnd.Servicos.SDR.Services
             return new UpdatedLeadResponse(leadToUpdate.NomeFantasia, leadToUpdate.Setor, leadToUpdate.Faturamento, leadToUpdate.Site);
         } // Completo
 
+        public async Task DesqualifyLeadAsync(int leadId, LeadDeleteReasonRequest reason)
+        {
+            // Verifica se existe
+            // Validar o id do lead
+            // lalidar a mensagem (não pode ser nula ou vazia)
+            string fullMessage = $"O lead {reason.LeadName} - CNPJ {reason.Cnpj} foi desqualificado em {reason.ColumnStatus}, por atendente {reason.Attendant}, devido o seguinte motivo: {reason.Reason}.";
+            await _leadDAL.DesqualifyLeadAsync(leadId, fullMessage);
+        }
+
+        public async Task RemoveLeadAsync(int leadId)
+        {
+            // Verifica se existe
+            // Validar o id do lead
+            await _leadDAL.DeleteLeadAsync(leadId);
+        }
 
         // -------------------------------- MÉTODOS PARA REFATORAÇÂO --------------------------------
 

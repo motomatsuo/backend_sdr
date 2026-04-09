@@ -103,7 +103,7 @@ namespace BackEnd.Repositorios.SDR.DAL
             return lead;
         } // Completo
 
-        public async Task<DateTime> SelectCadencyStartDate(int idLead)
+        public async Task<DateTime> SelectCadencyStartDate(int idLead, int activityId)
         {
 
             var responseLead = await _supabase
@@ -113,13 +113,28 @@ namespace BackEnd.Repositorios.SDR.DAL
                 .Get();
 
             string cnpj = responseLead.Models.First().CNPJ;
-            string description = $"Status do lead atualizado | CNPJ: {cnpj} | Status atual: TentandoContato";
+            string description;
+
+            if (activityId == 3)
+            {
+                description = $"Status do lead atualizado | CNPJ: {cnpj} | Status atual: TentandoContato";
+            }
+            else if (activityId == 4)
+            {
+                description = $"Status do lead atualizado | CNPJ: {cnpj} | Status atual: ContatoSignificativo";
+            }
+            else
+            {
+                throw new RepositoriesException("Id de cadencia informado é inválido.");
+            }
+
+
 
             var response = await _supabase
                 .From<ActivityLogDbRepresent>()
                 .Where(al => al.LeadFk == idLead)
                 .Where(al => al.Description == description)
-                .Where(al => al.StatusProspeccaoFk == 3)
+                .Where(al => al.StatusProspeccaoFk == activityId)
                 .Get();
 
             var activity = response.Models.FirstOrDefault();
@@ -257,7 +272,8 @@ namespace BackEnd.Repositorios.SDR.DAL
                 Site = (lead.Site != "") ? lead.Site : null, // coloquei essa condição para ver se passa
                 DataInclusao = DateTime.Now,
                 StatusProspeccaoFk = 1,
-                LoginPortalFk = loginPortalFk,
+                //LoginPortalFk = loginPortalFk, Comentei e vou mockar 1 enquanto testo, quando subir em prosu eu retiro o comentário e ai passa a pegar o id do usuário logado normalmente
+                LoginPortalFk = 1,
             };
 
             var response = await _supabase
@@ -304,7 +320,7 @@ namespace BackEnd.Repositorios.SDR.DAL
                 {
                     Nome = ct.Name,
                     Cargo = ct.JobTitle,
-                    Email = (ct.Email != "")? ct.Email : null, //colocoquei essa condição para ver se passa
+                    Email = (ct.Email != "") ? ct.Email : null, //colocoquei essa condição para ver se passa
                     LeadFk = idLead
                 };
 
@@ -391,8 +407,8 @@ namespace BackEnd.Repositorios.SDR.DAL
                 LeadFk = idLead,
                 Description = description,
                 Register = DateTime.Now,
-                LoginPortalFk = idAdminOrLeader,
-                //LoginPortalFk = 1,
+                // LoginPortalFk = idAdminOrLeader, mockei para 1 por enquanto, depois é só retirar o comentário dessa linha e ai passa a pegar o id do usuário logado normalmente
+                LoginPortalFk = 1,
                 StatusProspeccaoFk = (int)ProspectionStatus.NovoLead
             };
 
@@ -402,6 +418,43 @@ namespace BackEnd.Repositorios.SDR.DAL
 
             if (insertResponse.Models == null)
                 throw new RepositoriesException("Erro ao registrar atividade de inclusão de lead.");
+        }
+
+        public async Task DeleteLeadAsync(int leadId)
+        {
+            // Verifica se existe
+            var existing = await _supabase
+                .From<LeadDbRepresent>()
+                .Where(e => e.LeadId == leadId)
+                .Get();
+
+            if (!existing.Models.Any())
+                throw new RepositoriesException("Lead não encontrado.");
+
+            await _supabase
+                .From<LeadDbRepresent>()
+                .Where(e => e.LeadId == leadId)
+                .Delete();
+
+            //return NoContent(); // 204
+        }
+
+        public async Task DesqualifyLeadAsync(int leadId, string fullMessage)
+        {
+            await DeleteLeadAsync(leadId);
+
+            var logDb = new LogLeadsDbRepresent
+            {
+                Log = fullMessage.ToUpper()
+            };
+
+            var insertResponse = await _supabase
+                .From<LogLeadsDbRepresent>()
+                .Insert(logDb);
+
+            var created = insertResponse.Models.FirstOrDefault();
+            if (created == null)
+                throw new RepositoriesException("Erro ao registrar log de lead desqualificado.");
         }
     }
 }

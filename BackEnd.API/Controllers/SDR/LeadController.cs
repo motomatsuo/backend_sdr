@@ -71,12 +71,12 @@ namespace BackEnd.API.Controllers.SDR
             }
         } // Completo
 
-        [HttpGet("{idLead}/activity")]
-        public async Task<IActionResult> GetCadencyStartDate(int idLead)
+        [HttpGet("{idLead}/activity/{activityId}")]
+        public async Task<IActionResult> GetCadencyStartDate(int idLead, int activityId)
         {
             try
             {
-                DateTime cadencyStartDate = await _leadService.RetrieveCadencyStartDate(idLead);
+                DateTime cadencyStartDate = await _leadService.RetrieveCadencyStartDate(idLead, activityId);
                 return Ok(cadencyStartDate);
             }
             catch (ModelException ex)
@@ -210,6 +210,10 @@ namespace BackEnd.API.Controllers.SDR
         [HttpDelete("{leadId}")] // Funcionando, falta tratar erros e colocar na classe de servico.
         public async Task<IActionResult> DeleteLead(int leadId)
         {
+            await _leadService.RemoveLeadAsync(leadId);
+            return Ok();
+
+            /*
             // Verifica se existe
             var existing = await _supabase
                 .From<LeadDbRepresent>()
@@ -225,6 +229,7 @@ namespace BackEnd.API.Controllers.SDR
                 .Delete();
 
             return NoContent(); // 204
+            */
         }
 
 
@@ -239,6 +244,24 @@ namespace BackEnd.API.Controllers.SDR
             catch (HttpRequestException ex)
             {
                 throw new HttpRequestException(ex.Message);
+            }
+        }
+
+        [HttpDelete("desqualificar/{leadId}")]
+        public async Task<IActionResult> DesqualifyLeadAsync(int leadId, [FromBody] LeadDeleteReasonRequest reason)
+        {
+            try
+            {
+                await _leadService.DesqualifyLeadAsync(leadId, reason);
+                return Ok();
+            }
+            catch (ModelException ex)
+            {
+                return BadRequest($"Erro no envio dos dados: {ex.Message}");
+            }
+            catch (RepositoriesException ex)
+            {
+                return NotFound($"Erro ao inserir os dados: {ex.Message}");
             }
         }
     }
