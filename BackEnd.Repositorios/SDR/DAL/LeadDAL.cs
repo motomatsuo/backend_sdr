@@ -272,8 +272,8 @@ namespace BackEnd.Repositorios.SDR.DAL
                 Site = (lead.Site != "") ? lead.Site : null, // coloquei essa condição para ver se passa
                 DataInclusao = DateTime.Now,
                 StatusProspeccaoFk = 1,
-                //LoginPortalFk = loginPortalFk, Comentei e vou mockar 1 enquanto testo, quando subir em prosu eu retiro o comentário e ai passa a pegar o id do usuário logado normalmente
-                LoginPortalFk = 1,
+                LoginPortalFk = loginPortalFk,
+                // LoginPortalFk = 1, Habilitar essa linha no env de teste e comentar a linha de cima, quando for para produção é só fazer o contrário, comentar essa linha e descomentar a linha de cima para pegar o id do usuário logado
             };
 
             var response = await _supabase
@@ -407,8 +407,8 @@ namespace BackEnd.Repositorios.SDR.DAL
                 LeadFk = idLead,
                 Description = description,
                 Register = DateTime.Now,
-                // LoginPortalFk = idAdminOrLeader, mockei para 1 por enquanto, depois é só retirar o comentário dessa linha e ai passa a pegar o id do usuário logado normalmente
-                LoginPortalFk = 1,
+                LoginPortalFk = idAdminOrLeader,
+                // LoginPortalFk = 1, Habilitar essa linha no env de teste e comentar a linha de cima, quando for para produção é só fazer o contrário, comentar essa linha e descomentar a linha de cima para pegar o id do usuário logado
                 StatusProspeccaoFk = (int)ProspectionStatus.NovoLead
             };
 
