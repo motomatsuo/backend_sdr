@@ -264,5 +264,13 @@ namespace BackEnd.API.Controllers.SDR
                 return NotFound($"Erro ao inserir os dados: {ex.Message}");
             }
         }
+
+        // ------------------------------------- ENDPOINT DE TESTE -------------------------------------
+        [HttpPost("teste-acompanhamentos")]
+        public async Task<IActionResult> PostTestAcompanhamentos([FromBody] DateTime registerDate)
+        {
+            await _leadService.RegisterMonitoringDate(registerDate);
+            return Ok();
+        }
     }
 }

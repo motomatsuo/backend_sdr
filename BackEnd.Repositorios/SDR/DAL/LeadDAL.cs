@@ -5,6 +5,8 @@ using BackEnd.Modelos.SDR.Modelos;
 using BackEnd.Repositorios.SDR.Data_Representations;
 using BackEnd.Repositorios.SDR.Exceptions;
 using Supabase;
+using System.Net.Http.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BackEnd.Repositorios.SDR.DAL
 {
@@ -272,8 +274,8 @@ namespace BackEnd.Repositorios.SDR.DAL
                 Site = (lead.Site != "") ? lead.Site : null, // coloquei essa condição para ver se passa
                 DataInclusao = DateTime.Now,
                 StatusProspeccaoFk = 1,
-                LoginPortalFk = loginPortalFk,
-                // LoginPortalFk = 1, Habilitar essa linha no env de teste e comentar a linha de cima, quando for para produção é só fazer o contrário, comentar essa linha e descomentar a linha de cima para pegar o id do usuário logado
+                //LoginPortalFk = loginPortalFk,
+                LoginPortalFk = 1 // Habilitar essa linha no env de teste e comentar a linha de cima, quando for para produção é só fazer o contrário, comentar essa linha e descomentar a linha de cima para pegar o id do usuário logado
             };
 
             var response = await _supabase
@@ -407,8 +409,8 @@ namespace BackEnd.Repositorios.SDR.DAL
                 LeadFk = idLead,
                 Description = description,
                 Register = DateTime.Now,
-                LoginPortalFk = idAdminOrLeader,
-                // LoginPortalFk = 1, Habilitar essa linha no env de teste e comentar a linha de cima, quando for para produção é só fazer o contrário, comentar essa linha e descomentar a linha de cima para pegar o id do usuário logado
+                //LoginPortalFk = idAdminOrLeader,
+                LoginPortalFk = 1, // Habilitar essa linha no env de teste e comentar a linha de cima, quando for para produção é só fazer o contrário, comentar essa linha e descomentar a linha de cima para pegar o id do usuário logado
                 StatusProspeccaoFk = (int)ProspectionStatus.NovoLead
             };
 
@@ -456,5 +458,85 @@ namespace BackEnd.Repositorios.SDR.DAL
             if (created == null)
                 throw new RepositoriesException("Erro ao registrar log de lead desqualificado.");
         }
+
+        // Metodo teste depois vou ajustar
+        public async Task<int> InsertFirstMonitoringReq(PostMonitoringReq monitoring)
+        {
+            try
+            {
+                var insert = new FirstMonitoringDbRepresent
+                {
+                    DataAcompanhamento = monitoring.MontoringDate,
+                };
+
+                var dbInsertResponse = await _supabase
+                    .From<FirstMonitoringDbRepresent>()
+                    .Insert(insert);
+
+                if(dbInsertResponse == null)
+                    throw new Exception($"Erro Supabase, Falha no teste"); // deu exceção aqui
+
+                var id = dbInsertResponse.Models.FirstOrDefault().Id;
+                Console.WriteLine(id);
+                return id;
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new HttpRequestException("Erro ao comunicar com o Supabase.", ex);
+            }
+        }
+        
+        public async Task<int> InsertSecondtMonitoringReq(PostMonitoringReq monitoring)
+        {
+            try
+            {
+                var insert = new SecondMonitoringDbRepresent
+                {
+                    DataAcompanhamento = monitoring.MontoringDate,
+                };
+
+                var dbInsertResponse = await _supabase
+                    .From<SecondMonitoringDbRepresent>()
+                    .Insert(insert);
+
+                if (dbInsertResponse == null)
+                    throw new Exception($"Erro Supabase, Falha no teste"); // deu exceção aqui
+
+                var id = dbInsertResponse.Models.FirstOrDefault().Id;
+                Console.WriteLine(id);
+                return id;
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new HttpRequestException("Erro ao comunicar com o Supabase.", ex);
+            }
+        }
+
+        public async Task<int> InsertThirthMonitoringReq(PostMonitoringReq monitoring)
+        {
+            try
+            {
+                var insert = new ThirdMonitoringDbRepresent
+                {
+                    DataAcompanhamento = monitoring.MontoringDate,
+                };
+
+                var dbInsertResponse = await _supabase
+                    .From<ThirdMonitoringDbRepresent>()
+                    .Insert(insert);
+
+                if (dbInsertResponse == null)
+                    throw new Exception($"Erro Supabase, Falha no teste"); // deu exceção aqui
+
+                var id = dbInsertResponse.Models.FirstOrDefault().Id;
+                Console.WriteLine(id);
+                return id;
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new HttpRequestException("Erro ao comunicar com o Supabase.", ex);
+            }
+        }
+        
     }
 }

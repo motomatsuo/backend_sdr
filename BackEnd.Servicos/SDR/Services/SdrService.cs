@@ -1,4 +1,6 @@
 ﻿using BackEnd.Modelos.SDR.DTO.DataTables;
+using BackEnd.Modelos.SDR.DTO.Lead;
+using BackEnd.Repositorios.SDR.Data_Representations;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,10 +10,11 @@ namespace BackEnd.Servicos.SDR.Services
     public class SdrService
     {
         private readonly MotoMatsuoSupabaseClient _matsuoSupabaseClient;
-
-        public SdrService(MotoMatsuoSupabaseClient matsuoSupabaseClient)
+        private readonly LeadService _leadService;
+        public SdrService(MotoMatsuoSupabaseClient matsuoSupabaseClient, LeadService leadService)
         {
             _matsuoSupabaseClient = matsuoSupabaseClient;
+            _leadService = leadService;
         }
 
         public async Task RegisterNewClient(int idLoginPortal, CreateClientRequest createClientRequest)
@@ -53,7 +56,13 @@ namespace BackEnd.Servicos.SDR.Services
                 string generalDataIdRandom = generalData.id_cliente;
                 await _matsuoSupabaseClient.InsertGeneralData(generalData);
                 int generalDataId = await _matsuoSupabaseClient.SelectGeneralDataId(generalDataIdRandom);
-                await _matsuoSupabaseClient.InsertGeneralTable(new GeneralTableData(DateTime.UtcNow, contactId, generalDataId, idLoginPortal));
+
+                // Preciso chamar a função de registrar datas aqui 
+                var ids = await _leadService.RegisterMonitoringDate(createClientRequest.ComplementaryData.created_at);
+
+
+
+                await _matsuoSupabaseClient.InsertGeneralTable(new GeneralTableData(DateTime.UtcNow, contactId, generalDataId, ids[0], ids[1], ids[2], idLoginPortal));
                 int contactIdClient = await _matsuoSupabaseClient.SelectContactIdClientAsync(createClientRequest.ContactsData.cnpj);
                 await _matsuoSupabaseClient.UpdateGeneralTableAsync(contactIdClient, createClientRequest.DadosVendedorRequest.dados_vendedor);
             }
@@ -75,5 +84,86 @@ namespace BackEnd.Servicos.SDR.Services
                 .ToArray());
         } // Gera um ID temporário de 6 caracteres
 
+
+        /* Versão para testar
+         * 
+        public async Task<int> InsertFirstMonitoringReq(PostMonitoringReq monitoring)
+        {
+            try
+            {
+                var insert = new FirstMonitoringDbRepresent
+                {
+                    DataAcompanhamento = monitoring.MontoringDate,
+                };
+
+                var dbInsertResponse = await _supabase
+                    .From<FirstMonitoringDbRepresent>()
+                    .Insert(insert);
+
+                if (dbInsertResponse == null)
+                    throw new Exception($"Erro Supabase, Falha no teste"); // deu exceção aqui
+
+                var id = dbInsertResponse.Models.FirstOrDefault().Id;
+                Console.WriteLine(id);
+                return id;
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new HttpRequestException("Erro ao comunicar com o Supabase.", ex);
+            }
+        }
+
+        public async Task<int> InsertSecondtMonitoringReq(PostMonitoringReq monitoring)
+        {
+            try
+            {
+                var insert = new SecondMonitoringDbRepresent
+                {
+                    DataAcompanhamento = monitoring.MontoringDate,
+                };
+
+                var dbInsertResponse = await _supabase
+                    .From<SecondMonitoringDbRepresent>()
+                    .Insert(insert);
+
+                if (dbInsertResponse == null)
+                    throw new Exception($"Erro Supabase, Falha no teste"); // deu exceção aqui
+
+                var id = dbInsertResponse.Models.FirstOrDefault().Id;
+                Console.WriteLine(id);
+                return id;
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new HttpRequestException("Erro ao comunicar com o Supabase.", ex);
+            }
+        }
+
+        public async Task<int> InsertThirthMonitoringReq(PostMonitoringReq monitoring)
+        {
+            try
+            {
+                var insert = new ThirdMonitoringDbRepresent
+                {
+                    DataAcompanhamento = monitoring.MontoringDate,
+                };
+
+                var dbInsertResponse = await _supabase
+                    .From<ThirdMonitoringDbRepresent>()
+                    .Insert(insert);
+
+                if (dbInsertResponse == null)
+                    throw new Exception($"Erro Supabase, Falha no teste"); // deu exceção aqui
+
+                var id = dbInsertResponse.Models.FirstOrDefault().Id;
+                Console.WriteLine(id);
+                return id;
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new HttpRequestException("Erro ao comunicar com o Supabase.", ex);
+            }
+        }
+        */
     }
 }

@@ -338,5 +338,58 @@ namespace BackEnd.Servicos.SDR.Services
 
         // -------------------------------- MÉTODOS PARA REFATORAÇÂO --------------------------------
 
+        // Metodo teste para inserir a data de acompanhamento
+        public async Task<List<int>> RegisterMonitoringDate(DateTime date)
+        {
+            var monitoringDates = CalcularDiasUteis(date, 60);
+            List<int> monitoringsIds = new List<int>();
+            monitoringsIds.Add(await _leadDAL.InsertFirstMonitoringReq(monitoringDates[0]));
+            monitoringsIds.Add(await _leadDAL.InsertSecondtMonitoringReq(monitoringDates[1]));
+            monitoringsIds.Add(await _leadDAL.InsertThirthMonitoringReq(monitoringDates[2]));
+            return monitoringsIds;
+        }
+
+        private List<PostMonitoringReq> CalcularDiasUteis(DateTime dataInicial, int diasDesejados)
+        {
+            int diasUtei = 5;
+            int diasTotais = 0;
+
+            List<PostMonitoringReq> list = new List<PostMonitoringReq>();
+
+            DateTime acomp15;
+            DateTime acomp30;
+            DateTime acomp60;
+
+            while (diasTotais < diasDesejados)
+            {
+                dataInicial = dataInicial.AddDays(1);
+
+                if (dataInicial.DayOfWeek != DayOfWeek.Saturday && dataInicial.DayOfWeek != DayOfWeek.Sunday)
+                {
+                    diasTotais++;
+                }
+
+                if (diasTotais == 15)
+                {
+                    acomp15 = dataInicial;
+                    list.Add(new PostMonitoringReq(acomp15));
+                    Console.WriteLine($"Acompanhamento 15D: {acomp15.ToShortDateString()}");
+                }
+                else if (diasTotais == 30)
+                {
+                    acomp30 = dataInicial;
+                    list.Add(new PostMonitoringReq(acomp30));
+                    Console.WriteLine($"Acompanhamento 30D: {acomp30.ToShortDateString()}");
+                }
+                else if (diasTotais == 60)
+                {
+                    acomp60 = dataInicial;
+                    list.Add(new PostMonitoringReq(acomp60));
+                    Console.WriteLine($"Acompanhamento 60D: {acomp60.ToShortDateString()}");
+                }
+            }
+
+            return list;
+        } // ta funcionando, mas os outros valores estão sendo passados, eu só posso passar a data, VOU TER QUE REVER
     }
 }
