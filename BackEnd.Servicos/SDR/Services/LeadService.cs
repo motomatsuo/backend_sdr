@@ -367,25 +367,25 @@ namespace BackEnd.Servicos.SDR.Services
                 if (dataInicial.DayOfWeek != DayOfWeek.Saturday && dataInicial.DayOfWeek != DayOfWeek.Sunday)
                 {
                     diasTotais++;
-                }
 
-                if (diasTotais == 15)
-                {
-                    acomp15 = dataInicial;
-                    list.Add(new PostMonitoringReq(acomp15));
-                    Console.WriteLine($"Acompanhamento 15D: {acomp15.ToShortDateString()}");
-                }
-                else if (diasTotais == 30)
-                {
-                    acomp30 = dataInicial;
-                    list.Add(new PostMonitoringReq(acomp30));
-                    Console.WriteLine($"Acompanhamento 30D: {acomp30.ToShortDateString()}");
-                }
-                else if (diasTotais == 60)
-                {
-                    acomp60 = dataInicial;
-                    list.Add(new PostMonitoringReq(acomp60));
-                    Console.WriteLine($"Acompanhamento 60D: {acomp60.ToShortDateString()}");
+                    if (diasTotais == 15)
+                    {
+                        acomp15 = dataInicial;
+                        list.Add(new PostMonitoringReq(acomp15));
+                        Console.WriteLine($"Acompanhamento 15D: {acomp15.ToShortDateString()}");
+                    }
+                    else if (diasTotais == 30)
+                    {
+                        acomp30 = dataInicial;
+                        list.Add(new PostMonitoringReq(acomp30));
+                        Console.WriteLine($"Acompanhamento 30D: {acomp30.ToShortDateString()}");
+                    }
+                    else if (diasTotais == 60)
+                    {
+                        acomp60 = dataInicial;
+                        list.Add(new PostMonitoringReq(acomp60));
+                        Console.WriteLine($"Acompanhamento 60D: {acomp60.ToShortDateString()}");
+                    }
                 }
             }
 
